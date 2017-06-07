@@ -154,7 +154,7 @@ def load():
     with engine.connect() as conn, conn.begin():
         data = pd.read_sql_table('questdata', conn)
 
-    return render_template('load_survey.html', data=data)
+    return render_template('stats.html', data=data)
 
 if __name__ == "__main__":
     app.secret_key = 'some secret key'

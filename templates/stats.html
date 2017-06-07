@@ -3,178 +3,133 @@
 
 {% block content %}
 
-<div class="page-header">
-    <h1>Raw data</h1>
-</div>
-
-<table class="table">
-    <thead>
-    <tr>
-        <th>#</th>
-        <th>Created at</th>
-        <th>First Name</th>
-        <th>Email</th>
-        <th>Age</th>
-        <th>Gestationa Age</th>
-        <th></th>
-        <th>Python</th>
-        <th>Flask</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    {% for element in formdata %}
-    <tr>
-        <td>{{ element.id }}</td>
-        <td>{{ element.created_at }}</td>
-        <td>{{ element.firstname }}</td>
-        <td>{{ element.email }}</td>
-        <td>{{ element.age }}</td>
-        <td>{{ element.income }}</td>
-        <td>{{ element.satisfaction }}</td>
-        <td>{{ element.q1 }}</td>
-        <td>{{ element.q2 }}</td>
-
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
-
-
+<h4 style="margin-top: 100px">Recommend Chart</h4>
+<svg id="recommend" width="960" height="500" style="margin-top: 50px"></svg>
+<h4>Job Chart</h4>
+<svg id="job" width="960" height="500" style="margin-top: 50px"></svg>
+<h4>Work Skill Chart</h4>
+<svg id="work_skill" width="960" height="500" style="margin-top: 50px"></svg>
 {% endblock %}
 
-<!DOCTYPE html>
-<meta charset="utf-8">
-<style>
+{% block scripts %}
+<script src="https://d3js.org/d3.v4.min.js"></script>
 
-body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  position: relative;
-  width: 960px;
-}
-
-.axis text {
-  font: 10px sans-serif;
-}
-
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-.bar {
-  fill: steelblue;
-  fill-opacity: .9;
-}
-
-.x.axis path {
-  display: none;
-}
-
-label {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
-
-</style>
-<label><input type="checkbox"> Sort values</label>
-<script src="//d3js.org/d3.v3.min.js"></script>
 <script>
+    var k = ['recommend', 'job', 'work_skill'];
+    var dane = [];
+    k.forEach(function(el, i, ar){
+        dane[el] = [];
+    });
+    {% set k = ['recommend', 'job', 'work_skill'] %}
+    {% for type in k %}
+    {% for row in data.groupby(['faculty',type]).count().iterrows() %}
+        dane['{{type}}'].push({wydzial: "{{row[0][0]}}", type: "{{row[0][1]}}", number: "{{row[1]['quest_id']}}" })
+    {% endfor %}
+        rysujWykres(dane['{{type}}'], "#{{type}}");
+    {% endfor %}
+    console.log(dane);
 
-var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
 
-var formatPercent = d3.format(".0%");
+  function rysujWykres(dane, id){
+          var map = new Map();
+    dane.forEach(function(element, index, array){
+        var item = {};
+        if(map.has(element.wydzial)){
+            item = map.get(element.wydzial);
+            item[element.type] = element.number;
+            map.set(element.wydzial, item);
+        }else {
+            item[element.type] = element.number;
+            map.set(element.wydzial, item);
+        }
+    });
+    var data = [];
+    data.columns = ["wydzial", "yes", "no", "dunno"];
+    map.forEach(function(value, key) {
+        var item = {"yes":0, "no":0, "dunno":0};
+        Object.assign(item, value);
+        item["wydzial"] = key;
+        data.push(item);
+    });
 
-var x = d3.scale.ordinal()
-    .rangeRoundBands([0, width], .1, 1);
+var svg = d3.select(id),
+    margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = +svg.attr("width") - margin.left - margin.right,
+    height = +svg.attr("height") - margin.top - margin.bottom,
+    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var y = d3.scale.linear()
-    .range([height, 0]);
+var x0 = d3.scaleBand()
+    .rangeRound([0, width])
+    .paddingInner(0.1);
 
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
+var x1 = d3.scaleBand()
+    .padding(0.05);
 
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left")
-    .tickFormat(formatPercent);
+var y = d3.scaleLinear()
+    .rangeRound([height, 0]);
 
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+var z = d3.scaleOrdinal()
+    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
-d3.tsv("data.tsv", function(error, data) {
+var keys = data.columns.slice(1);
+x0.domain(data.map(function(d) { return d.wydzial; }));
+  x1.domain(keys).rangeRound([0, x0.bandwidth()]);
+  y.domain([0,d3.max(data, function(d) { return d3.max(keys, function(key) { return parseInt(d[key]); }); })]).nice();
 
-  data.forEach(function(d) {
-    d.frequency = +d.frequency;
-  });
 
-  x.domain(data.map(function(d) { return d.letter; }));
-  y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
 
-  svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
-
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Frequency");
-
-  svg.selectAll(".bar")
-      .data(data)
+  g.append("g")
+    .selectAll("g")
+    .data(data)
+    .enter().append("g")
+      .attr("transform", function(d) { return "translate(" + x0(d.wydzial) + ",0)"; })
+    .selectAll("rect")
+    .data(function(d) { return keys.map(function(key) { return {key: key, value: d[key]}; }); })
     .enter().append("rect")
-      .attr("class", "bar")
-      .attr("x", function(d) { return x(d.letter); })
-      .attr("width", x.rangeBand())
-      .attr("y", function(d) { return y(d.frequency); })
-      .attr("height", function(d) { return height - y(d.frequency); });
+      .attr("x", function(d) { return x1(d.key); })
+      .attr("y", function(d) { return y(d.value); })
+      .attr("width", x1.bandwidth())
+      .attr("height", function(d) { return height - y(d.value); })
+      .attr("fill", function(d) { return z(d.key); });
 
-  d3.select("input").on("change", change);
+  g.append("g")
+      .attr("class", "axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x0));
 
-  var sortTimeout = setTimeout(function() {
-    d3.select("input").property("checked", true).each(change);
-  }, 2000);
+  g.append("g")
+      .attr("class", "axis")
+      .call(d3.axisLeft(y).ticks(null, "s"))
+    .append("text")
+      .attr("x", 2)
+      .attr("y", y(y.ticks().pop()) + 0.5)
+      .attr("dy", "0.32em")
+      .attr("fill", "#000")
+      .attr("font-weight", "bold")
+      .attr("text-anchor", "start")
+      .text("Ilość odpowiedzi");
 
-  function change() {
-    clearTimeout(sortTimeout);
+  var legend = g.append("g")
+      .attr("font-family", "sans-serif")
+      .attr("font-size", 10)
+      .attr("text-anchor", "end")
+    .selectAll("g")
+    .data(keys.slice().reverse())
+    .enter().append("g")
+      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
-    // Copy-on-write since tweens are evaluated after a delay.
-    var x0 = x.domain(data.sort(this.checked
-        ? function(a, b) { return b.frequency - a.frequency; }
-        : function(a, b) { return d3.ascending(a.letter, b.letter); })
-        .map(function(d) { return d.letter; }))
-        .copy();
+  legend.append("rect")
+      .attr("x", width - 19)
+      .attr("width", 19)
+      .attr("height", 19)
+      .attr("fill", z);
 
-    svg.selectAll(".bar")
-        .sort(function(a, b) { return x0(a.letter) - x0(b.letter); });
-
-    var transition = svg.transition().duration(750),
-        delay = function(d, i) { return i * 50; };
-
-    transition.selectAll(".bar")
-        .delay(delay)
-        .attr("x", function(d) { return x0(d.letter); });
-
-    transition.select(".x.axis")
-        .call(xAxis)
-      .selectAll("g")
-        .delay(delay);
-  }
-});
-
+  legend.append("text")
+      .attr("x", width - 24)
+      .attr("y", 9.5)
+      .attr("dy", "0.32em")
+      .text(function(d) { return d; });
+    }
 </script>
+
+{% endblock %}
