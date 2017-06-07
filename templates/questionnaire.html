@@ -22,7 +22,7 @@
     </div>
 
     <div class="form-group">
-      <label for="faculty">Wydział:</label>
+      <label form="faculty">Wydział:</label>
       <select class="form-control" name="faculty" id="wydzial">
         <option value="wgig">Wydział Górnictwa i Geoinżynierii</option>
         <option value="wimip">Wydział Inżynierii Metali i Informatyki Przemysłowej</option>
@@ -43,7 +43,7 @@
     </div>
 
     <div class="form-group">
-      <label for="field">Kierunek:</label>
+      <label form="field">Kierunek:</label>
       <select class="form-control" name="field" id="kierunki">
         <option>Górnictwo i geologia</option>
       </select>
@@ -159,7 +159,7 @@
         console.log(kierunki[value]);
         for (var i = 0; i< kierunki[value].length; i++){
             var opt = document.createElement('option');
-            opt.value = 0;
+//            opt.value = 0;
             opt.innerHTML = kierunki[value][i];
             kierunkiDOM.appendChild(opt);
         }

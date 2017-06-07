@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, sessions, redirect, url_for, request, flash
+from flask import Flask, Markup, render_template, session, redirect, url_for, request, flash, Response, g, jsonify
 from flask_login import LoginManager
 from flask_login import login_user , logout_user , current_user , login_required
 from flask_sqlalchemy import SQLAlchemy
@@ -13,6 +13,7 @@ import plotly.tools as tls
 import plotly.dashboard_objs as dashboard
 from sqlalchemy.types import String
 from sqlalchemy import create_engine
+import json
 
 conn = MySQLdb.connect(host="mysql.agh.edu.pl", user="uzuch", passwd="e1eSLKm9Y1NTMt27", db="uzuch")
 
@@ -154,7 +155,6 @@ def load():
         data = pd.read_sql_table('questdata', conn)
 
     return render_template('load_survey.html', data=data)
-
 
 if __name__ == "__main__":
     app.secret_key = 'some secret key'

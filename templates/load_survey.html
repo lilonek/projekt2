@@ -11,17 +11,146 @@
 
 </script> -->
 
-</body>
-</html>
-
 <div class="page-header">
-  <h1>Wyniki</h1>
+    <h1>Raw data</h1>
 </div>
-<div>{{data}}</div>
 
+<table class="table">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Created at</th>
+        <th>First Name</th>
+        <th>Email</th>
+        <th>Age</th>
+        <th>Gestationa Age</th>
+        <th></th>
+        <th>Python</th>
+        <th>Flask</th>
+    </tr>
+    </thead>
+
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.arc text {
+  font: 10px sans-serif;
+  text-anchor: middle;
+}
+
+.arc path {
+  stroke: #fff;
+}
+
+</style>
+<svg width="960" height="500"></svg>
 <script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+    //Get the Date and store it in array
+$records = array();
+if ( $result=mysqli_query($conn,$sql) )
+    while ( $obj=mysqli_fetch_object($result) )
+        $records[] = $obj;
 
-</body>
-</html>
+//echo in json format on screen
+echo "[";
+$comma_1 = "";
+foreach($records as $obj)
+{
+    echo $comma_1."{";
+    $comma_2 = "";
+    foreach($obj as $key => $value)
+    {
+        echo $comma_2.'"'.$key."\": \"". $value . "\"";
+        $comma_2 = ", ";
+    }
+    echo "}";
+    $comma_1 = ", \n";
+}
 
-{% endblock %}
+//var svg = d3.select("svg"),
+//    width = +svg.attr("width"),
+//    height = +svg.attr("height"),
+//    radius = Math.min(width, height) / 2,
+//    g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+//
+//var color = d3.scaleOrdinal(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+//
+//var pie = d3.pie()
+//    .sort(null)
+//    .value(function(d) { return d.population; });
+//
+//var path = d3.arc()
+//    .outerRadius(radius - 10)
+//    .innerRadius(0);
+//
+//var label = d3.arc()
+//    .outerRadius(radius - 40)
+//    .innerRadius(radius - 40);
+//
+//function update_slider(time) {
+//    var dateObj = new Date();
+//    dateObj.setHours(Math.floor(time / 60));
+//    dateObj.setMinutes(time % 60);
+//    d3.select("#prettyTime")
+//        .text(dateObj.toTimeString().substring(0, 5));
+//}
+//d3.csv("https://bl.ocks.org/mbostock/3887235#data.csv", function(d) {
+//  d.population = +d.population;
+//  return d;
+//}, function(error, data) {
+//  if (error) throw error;
+//
+//  var arc = g.selectAll(".arc")
+//    .data(pie(data))
+//    .enter().append("g")
+//      .attr("class", "arc");
+//
+//  arc.append("path")
+//      .attr("d", path)
+//      .attr("fill", function(d) { return color(d.data.age); });
+//
+//  arc.append("text")
+//      .attr("transform", function(d) { return "translate(" + label.centroid(d) + ")"; })
+//      .attr("dy", "0.35em")
+//      .text(function(d) { return d.data.age; });
+//});
+
+</script>
+
+    <!--<html>-->
+  <!--<head>-->
+    <!--<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>-->
+    <!--<script type="text/javascript">-->
+      <!--google.charts.load('current', {'packages':['corechart']});-->
+      <!--google.charts.setOnLoadCallback(drawChart);-->
+
+      <!--function drawChart() {-->
+
+        <!--var data = google.visualization.arrayToDataTable([-->
+          <!--['Task', 'Hours per Day'],-->
+          <!--['Work',     11],-->
+          <!--['Eat',      2],-->
+          <!--['Commute',  2],-->
+          <!--['Watch TV', 2],-->
+          <!--['Sleep',    7]-->
+        <!--]);-->
+
+        <!--var options = {-->
+          <!--title: 'My Daily Activities'-->
+        <!--};-->
+
+        <!--var chart = new google.visualization.PieChart(document.getElementById('piechart'));-->
+
+        <!--chart.draw(data, options);-->
+      <!--}-->
+    <!--</script>-->
+  <!--</head>-->
+  <!--<body>-->
+    <!--<div id="piechart" style="width: 900px; height: 500px;"></div>-->
+  <!--</body>-->
+<!--</html>-->
+<!--</table>-->
+<!--{% endblock %}-->
