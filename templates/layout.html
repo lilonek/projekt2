@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>eatWell</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link href="static/css/font-awesome.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+        <link href="static/css/bootstrap.min.css" rel="stylesheet">
+        <link href="static/css/custom.css" rel="stylesheet">
+        <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<![endif]-->
+    </head>
+    <body>
+        <!--        HEADER       -->
+        <header class="site-header" role="banner">
+
+            <!--        NAVBAR      -->
+            <div class="navbar-wrapper">
+                <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+                    <div class="container">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a class="navbar-brand" href="index.html"><img src="static/img/aghh.png" alt="eatwell"></a>
+
+                        </div>
+                        <div class="navbar-collapse collapse">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/questionnaire">Kwestionariusz</a></li>
+                                <li><a href="/load">Wyniki</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </header>
+        <!--      eatwell        -->
+        <section id="hero" data-type="background" data-speed="2">
+            <article>
+                <div class="container clearfix">
+                <div class="row">
+
+                    <div class="col-md-5 col-xs-hidden">
+
+                    </div>
+
+                    <div class="col-md-7 hero-text ">
+                        <div class="row">
+
+                        <h1>Rozwiąż Quest!</h1>
+                        <p class="lead">Pomóż nam zdobyc zaliczenie!</p>
+
+                        </div>
+
+                    </div>
+                </div>
+                </div>
+            </article>
+
+
+        </section>
+        <!--      usługi       -->
+
+
+
+
+<div class="container theme-showcase" role="main">
+      {% block content %}{% endblock %}
+    </div> <!-- /container -->
+
+
+
+       <footer>
+           <div class="container">
+               <div class="col-sm-6">
+                   <nav>
+                       <ul class="list-unstyled list-inline">
+                           <li><a href="/">Home</a></li>
+                           <li><a href="/questionnaire">Quest</a></li>
+                           <li><a href="/load">Wyniki</a></li>
+                       </ul>
+                   </nav>
+               </div>
+           </div>
+
+       </footer>
+
+    <!-- Bootstrap core JavaScript -->
+       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+       <script src="/static/js/jquery-3.1.1.min.js"></script>
+       <script src="/static/js/bootstrap.min.js"></script>
+       <script src="/statics/js/main.js"></script>
+  </body>
+</html>
