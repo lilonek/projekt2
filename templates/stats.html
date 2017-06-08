@@ -3,12 +3,14 @@
 
 {% block content %}
 
-<h4 style="margin-top: 100px">Recommend Chart</h4>
+<h4 style="margin-top: 100px">Czy polecasz swój kierunek?</h4>
 <svg id="recommend" width="960" height="500" style="margin-top: 50px"></svg>
-<h4>Job Chart</h4>
+<h4>Czy podjąłeś się pracy w dziedzinie, w kierunku której się kształcisz?</h4>
 <svg id="job" width="960" height="500" style="margin-top: 50px"></svg>
-<h4>Work Skill Chart</h4>
+<h4>Czy uważasz, że obecnie spełniasz wymagania Twojego przyszłego pracodawcy odnośnie pojętej wiedzy oraz nabytych umiejętności?</h4>
 <svg id="work_skill" width="960" height="500" style="margin-top: 50px"></svg>
+
+
 {% endblock %}
 
 {% block scripts %}
@@ -44,9 +46,9 @@
         }
     });
     var data = [];
-    data.columns = ["wydzial", "yes", "no", "dunno"];
+    data.columns = ["wydzial", "yes", "no", "I don't know"];
     map.forEach(function(value, key) {
-        var item = {"yes":0, "no":0, "dunno":0};
+        var item = {"yes":0, "no":0, "I don't know":0};
         Object.assign(item, value);
         item["wydzial"] = key;
         data.push(item);
@@ -130,6 +132,6 @@ x0.domain(data.map(function(d) { return d.wydzial; }));
       .attr("dy", "0.32em")
       .text(function(d) { return d; });
     }
-</script>
 
+</script>
 {% endblock %}
